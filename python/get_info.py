@@ -22,7 +22,6 @@ if os.path.isfile(fname):
 else:
     resp = str(
         api.get_flight(icao24=icao24, callsign=callsign)
-        ).replace("'", "\""
         ).replace("None", "null"
         ).replace("True", "true"
         ).replace("False", "false")
