@@ -5,6 +5,7 @@ import sys
 import os
 import datetime
 import opensky_api
+import demjson
 
 api = opensky_api.OpenSkyApi()
 
@@ -20,11 +21,7 @@ if os.path.isfile(fname):
     with open(fname, "r") as f:
         print(f.read())
 else:
-    resp = str(
-        api.get_flight(icao24=icao24, callsign=callsign)
-        ).replace("None", "null"
-        ).replace("True", "true"
-        ).replace("False", "false")
+    resp = demjson.encode(api.get_flight(icao24=icao24, callsign=callsign))
     with open(fname, "w") as f:
         f.write(resp)
     print(resp)
