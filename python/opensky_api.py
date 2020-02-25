@@ -181,6 +181,47 @@ class OpenSkyApi(object):
             return OpenSkyStates(states_json)
         return None
 
+    def get_airport(self, icao=None):
+        params = {"icao": icao}
+        airport_json = self._get_json(
+            "/airports", self.get_airport, params=params
+        )
+        if airport_json is not None:
+            return airport_json
+        return None
+
+    def get_aircraft(self, icao24=None):
+        params = {}
+        aircraft_json = self._get_json(
+            "/metadata/aircraft/icao/{icao24}".format(icao24=icao24), 
+            self.get_aircraft, params=params
+        )
+        if aircraft_json is not None:
+            return aircraft_json
+        return None
+
+    def get_route(self, callsign=None):
+        params = {"callsign": callsign}
+        route_json = self._get_json(
+            "/routes", 
+            self.get_route, params=params
+        )
+        if route_json is not None:
+            return route_json
+        return None
+
+    def get_flight(self, callsign=None, icao24=None):
+        route = self.get_route(callsign=callsign)
+        departure_airport = self.get_airport(icao=route["route"][0])
+        arrival_airport = self.get_airport(icao=route["route"][1])
+        aircraft = self.get_aircraft(icao24=icao24)
+        return {
+            "route": route,
+            "departure_airport": departure_airport,
+            "arrival_airport": arrival_airport,
+            "aircraft": aircraft
+        }
+
     def get_my_states(self, time_secs=0, icao24=None, serials=None):
         """ Retrieve state vectors for your own sensors. Authentication is required for this operation.
         If time = 0 the most recent ones are taken. Optional filters may be applied for ICAO24 addresses and sensor
