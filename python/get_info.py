@@ -3,6 +3,7 @@
 
 import sys
 import os
+import datetime
 import opensky_api
 
 api = opensky_api.OpenSkyApi()
@@ -10,7 +11,11 @@ api = opensky_api.OpenSkyApi()
 icao24 = sys.argv[1]
 callsign = sys.argv[2]
 
-fname = "/var/root/OpenSky/{}_{}.json".format(icao24, callsign)
+fname = "/var/root/OpenSky/{}_{}_{}.json".format(
+    icao24,
+    callsign,
+    datetime.datetime.strftime(datetime.datetime.now(), "%Y_%m_%d")
+    )
 if os.path.isfile(fname):
     with open(fname, "r") as f:
         print(f.read())
