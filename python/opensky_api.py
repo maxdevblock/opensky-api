@@ -211,6 +211,9 @@ class OpenSkyApi(object):
         return None
 
     def get_flight(self, callsign=None, icao24=None):
+        if not self._check_rate_limit(10, 5, self.get_flight):
+            logger.debug("Blocking request due to rate limit")
+            return None
         route = self.get_route(callsign=callsign)
         departure_airport = self.get_airport(icao=route["route"][0])
         arrival_airport = self.get_airport(icao=route["route"][1])
